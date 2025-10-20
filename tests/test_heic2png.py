@@ -4,11 +4,15 @@ Unit tests for heic2png.py
 """
 
 import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from PIL import Image
 import pillow_heif
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # Register HEIF opener
 pillow_heif.register_heif_opener()
