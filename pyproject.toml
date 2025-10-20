@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "High-performance HEIC to PNG/JPG/WebP batch converter with parallel processing"
 readme = "README.md"
 license = {text = "Unlicense"}
-requires-python = ">=3.6"
+requires-python = ">=3.10"
 authors = [
     {name = "Lance Tuller", email = "lance@example.com"},
 ]
@@ -22,10 +22,6 @@ classifiers = [
     "License :: Public Domain",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -73,7 +69,7 @@ python_functions = ["test_*"]
 
 [tool.black]
 line-length = 100
-target-version = ['py36']
+target-version = ['py310']
 
 [tool.isort]
 profile = "black"
