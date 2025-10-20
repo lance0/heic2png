@@ -12,7 +12,7 @@ from PIL import Image
 import pillow_heif
 
 # Add parent directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 # Register HEIF opener
 pillow_heif.register_heif_opener()
@@ -30,11 +30,12 @@ class TestHeic2Png(unittest.TestCase):
     def tearDown(self):
         """Clean up test fixtures."""
         import shutil
+
         shutil.rmtree(self.test_dir)
 
     def create_test_image(self, filename, size=(100, 100), color=(255, 0, 0)):
         """Create a test image file."""
-        img = Image.new('RGB', size, color)
+        img = Image.new("RGB", size, color)
         img.save(self.input_dir / filename)
 
     def test_find_heic_files(self):
@@ -50,14 +51,14 @@ class TestHeic2Png(unittest.TestCase):
 
         heic_files = find_heic_files(self.input_dir)
         self.assertEqual(len(heic_files), 3)
-        self.assertTrue(all(f.suffix.lower() == '.heic' for f in heic_files))
+        self.assertTrue(all(f.suffix.lower() == ".heic" for f in heic_files))
 
     def test_setup_image_libraries(self):
         """Test that image libraries can be imported."""
         from heic2png import setup_image_libraries
 
         Image = setup_image_libraries()
-        self.assertTrue(hasattr(Image, 'open'))
+        self.assertTrue(hasattr(Image, "open"))
 
     def test_convert_single_file_png(self):
         """Test converting a single file to PNG."""
@@ -68,7 +69,7 @@ class TestHeic2Png(unittest.TestCase):
         self.create_test_image("test.heic")
 
         # Convert to PNG
-        args = (test_file, self.input_dir, str(self.output_dir), 'PNG', 85, True)
+        args = (test_file, self.input_dir, str(self.output_dir), "PNG", 85, True)
         success, message = convert_single_file(args)
 
         self.assertTrue(success)
@@ -80,9 +81,9 @@ class TestHeic2Png(unittest.TestCase):
 
         # Verify it's a valid PNG
         with Image.open(output_file) as img:
-            self.assertEqual(img.format, 'PNG')
+            self.assertEqual(img.format, "PNG")
             self.assertEqual(img.size, (100, 100))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

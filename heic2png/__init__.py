@@ -16,32 +16,37 @@ from typing import List, Tuple
 
 try:
     from tqdm import tqdm
+
     HAS_TQDM = True
 except ImportError:
     tqdm = None
     HAS_TQDM = False
+
 
 def setup_image_libraries():
     """Setup PIL and pillow-heif libraries."""
     try:
         from PIL import Image
         import pillow_heif
+
         # Register HEIF opener with PIL
         pillow_heif.register_heif_opener()
         return Image
     except ImportError as e:
-        if 'PIL' in str(e):
+        if "PIL" in str(e):
             print("Error: PIL (Pillow) library is required. Install with: pip install Pillow")
         else:
-            print("Error: pillow-heif library is required for HEIC support. Install with: pip install pillow-heif")
+            print(
+                "Error: pillow-heif library is required for HEIC support. Install with: pip install pillow-heif"
+            )
         sys.exit(1)
 
 
 def find_heic_files(input_path: Path) -> List[Path]:
     """Find all HEIC files in the input directory recursively."""
     heic_files = []
-    heic_files.extend(input_path.rglob('*.heic'))
-    heic_files.extend(input_path.rglob('*.HEIC'))
+    heic_files.extend(input_path.rglob("*.heic"))
+    heic_files.extend(input_path.rglob("*.HEIC"))
     return sorted(heic_files)  # Sort for consistent processing
 
 
@@ -58,6 +63,7 @@ def convert_single_file(args: Tuple[Path, Path, str, str, int, bool]) -> Tuple[b
     try:
         from PIL import Image
         import pillow_heif
+
         pillow_heif.register_heif_opener()
     except ImportError:
         return False, "Required libraries not available"
@@ -65,7 +71,7 @@ def convert_single_file(args: Tuple[Path, Path, str, str, int, bool]) -> Tuple[b
     # Calculate relative path from input directory
     relative_path = heic_file.relative_to(input_path)
     # Create output path with new extension
-    output_file = output_path / relative_path.with_suffix(f'.{output_format.lower()}')
+    output_file = output_path / relative_path.with_suffix(f".{output_format.lower()}")
 
     # Create parent directories if they don't exist
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -77,24 +83,24 @@ def convert_single_file(args: Tuple[Path, Path, str, str, int, bool]) -> Tuple[b
     try:
         with Image.open(heic_file) as img:
             # Convert color mode if necessary
-            if output_format.upper() in ('JPEG', 'JPG') and img.mode in ('RGBA', 'LA', 'P'):
+            if output_format.upper() in ("JPEG", "JPG") and img.mode in ("RGBA", "LA", "P"):
                 # Create white background for transparent images when converting to JPG
-                background = Image.new('RGB', img.size, (255, 255, 255))
-                if img.mode == 'P':
-                    img = img.convert('RGBA')
-                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                background = Image.new("RGB", img.size, (255, 255, 255))
+                if img.mode == "P":
+                    img = img.convert("RGBA")
+                background.paste(img, mask=img.split()[-1] if img.mode == "RGBA" else None)
                 img = background
-            elif img.mode not in ('RGB', 'RGBA') and output_format.upper() == 'PNG':
-                img = img.convert('RGB')
+            elif img.mode not in ("RGB", "RGBA") and output_format.upper() == "PNG":
+                img = img.convert("RGB")
 
             # Save with appropriate format and quality
             save_kwargs = {}
-            if output_format.upper() in ('JPEG', 'JPG', 'WEBP'):
-                save_kwargs['quality'] = quality
-                if img.mode == 'RGBA' and output_format.upper() == 'WEBP':
-                    save_kwargs['lossless'] = True
-                elif img.mode == 'RGBA':
-                    img = img.convert('RGB')  # WebP can handle RGBA, but JPG cannot
+            if output_format.upper() in ("JPEG", "JPG", "WEBP"):
+                save_kwargs["quality"] = quality
+                if img.mode == "RGBA" and output_format.upper() == "WEBP":
+                    save_kwargs["lossless"] = True
+                elif img.mode == "RGBA":
+                    img = img.convert("RGB")  # WebP can handle RGBA, but JPG cannot
 
             img.save(output_file, output_format.upper(), **save_kwargs)
 
@@ -107,9 +113,15 @@ def convert_single_file(args: Tuple[Path, Path, str, str, int, bool]) -> Tuple[b
         return False, f"✗ Error converting {heic_file}: {e}"
 
 
-def convert_heic_files(input_dir: str, output_dir: str, output_format: str = 'PNG',
-                      quality: int = 85, verbose: bool = True, parallel: bool = True,
-                      dry_run: bool = False) -> None:
+def convert_heic_files(
+    input_dir: str,
+    output_dir: str,
+    output_format: str = "PNG",
+    quality: int = 85,
+    verbose: bool = True,
+    parallel: bool = True,
+    dry_run: bool = False,
+) -> None:
     """
     Convert all HEIC files in input_dir to the specified format.
 
@@ -151,7 +163,7 @@ def convert_heic_files(input_dir: str, output_dir: str, output_format: str = 'PN
         print(f"DRY RUN: Would convert {len(heic_files)} HEIC file(s) to {output_format}")
         for heic_file in heic_files[:5]:  # Show first 5
             relative_path = heic_file.relative_to(input_path)
-            output_file = output_path / relative_path.with_suffix(f'.{output_format.lower()}')
+            output_file = output_path / relative_path.with_suffix(f".{output_format.lower()}")
             print(f"  {heic_file} -> {output_file}")
         if len(heic_files) > 5:
             print(f"  ... and {len(heic_files) - 5} more files")
@@ -162,8 +174,10 @@ def convert_heic_files(input_dir: str, output_dir: str, output_format: str = 'PN
     start_time = time.time()
 
     # Prepare arguments for conversion
-    conversion_args = [(heic_file, input_path, str(output_path), output_format, quality, verbose)
-                      for heic_file in heic_files]
+    conversion_args = [
+        (heic_file, input_path, str(output_path), output_format, quality, verbose)
+        for heic_file in heic_files
+    ]
 
     results = []
     if parallel and len(heic_files) > 1:
@@ -174,23 +188,24 @@ def convert_heic_files(input_dir: str, output_dir: str, output_format: str = 'PN
         with multiprocessing.Pool(processes=cpu_count) as pool:
             if HAS_TQDM and not verbose:
                 # Use progress bar for parallel processing
-                results = list(tqdm(  # type: ignore
-                    pool.imap(convert_single_file, conversion_args),
-                    total=len(heic_files),
-                    desc="Converting",
-                    unit="file"
-                ))
+                results = list(
+                    tqdm(  # type: ignore
+                        pool.imap(convert_single_file, conversion_args),
+                        total=len(heic_files),
+                        desc="Converting",
+                        unit="file",
+                    )
+                )
             else:
                 results = list(pool.imap(convert_single_file, conversion_args))
     else:
         # Sequential processing
         if HAS_TQDM and not verbose:
             # Use progress bar for sequential processing
-            results = [convert_single_file(args) for args in tqdm(  # type: ignore
-                conversion_args,
-                desc="Converting",
-                unit="file"
-            )]
+            results = [
+                convert_single_file(args)
+                for args in tqdm(conversion_args, desc="Converting", unit="file")  # type: ignore
+            ]
         else:
             results = [convert_single_file(args) for args in conversion_args]
 
@@ -223,6 +238,7 @@ def convert_heic_files(input_dir: str, output_dir: str, output_format: str = 'PN
     if converted_count > 0:
         print(".1f")
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Convert HEIC images to PNG, JPG, or WebP format",
@@ -233,22 +249,31 @@ Examples:
   %(prog)s input_dir output_dir --format JPG --quality 90
   %(prog)s input_dir output_dir --dry-run --verbose
   %(prog)s input_dir output_dir --parallel --format WEBP
-        """
+        """,
     )
 
-    parser.add_argument('input_dir', help='Input directory containing HEIC files')
-    parser.add_argument('output_dir', help='Output directory for converted files')
+    parser.add_argument("input_dir", help="Input directory containing HEIC files")
+    parser.add_argument("output_dir", help="Output directory for converted files")
 
-    parser.add_argument('-f', '--format', choices=['PNG', 'JPG', 'WEBP'],
-                       default='PNG', help='Output format (default: PNG)')
-    parser.add_argument('-q', '--quality', type=int, default=85,
-                       help='Quality for JPG/WebP (1-100, default: 85)')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                       help='Show detailed conversion progress')
-    parser.add_argument('--no-parallel', action='store_true',
-                       help='Disable parallel processing')
-    parser.add_argument('--dry-run', action='store_true',
-                       help='Show what would be converted without actually converting')
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=["PNG", "JPG", "WEBP"],
+        default="PNG",
+        help="Output format (default: PNG)",
+    )
+    parser.add_argument(
+        "-q", "--quality", type=int, default=85, help="Quality for JPG/WebP (1-100, default: 85)"
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Show detailed conversion progress"
+    )
+    parser.add_argument("--no-parallel", action="store_true", help="Disable parallel processing")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be converted without actually converting",
+    )
 
     args = parser.parse_args()
 
@@ -263,8 +288,9 @@ Examples:
         quality=args.quality,
         verbose=args.verbose,
         parallel=not args.no_parallel,
-        dry_run=args.dry_run
+        dry_run=args.dry_run,
     )
+
 
 if __name__ == "__main__":
     main()
