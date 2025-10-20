@@ -8,7 +8,6 @@ Supports batch processing with progress tracking and parallel conversion.
 
 import argparse
 import multiprocessing
-import os
 import sys
 import time
 from pathlib import Path
@@ -37,7 +36,8 @@ def setup_image_libraries():
             print("Error: PIL (Pillow) library is required. Install with: pip install Pillow")
         else:
             print(
-                "Error: pillow-heif library is required for HEIC support. Install with: pip install pillow-heif"
+                "Error: pillow-heif library is required for HEIC support. "
+                "Install with: pip install pillow-heif"
             )
         sys.exit(1)
 
@@ -139,7 +139,7 @@ def convert_heic_files(
         parallel: Whether to use parallel processing
         dry_run: If True, only show what would be converted
     """
-    Image = setup_image_libraries()
+    setup_image_libraries()
 
     input_path = Path(input_dir)
     output_path = Path(output_dir)

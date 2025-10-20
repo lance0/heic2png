@@ -3,8 +3,6 @@
 Simple test script to verify the HEIC to PNG conversion setup.
 """
 
-from pathlib import Path
-
 import pillow_heif
 from PIL import Image
 
