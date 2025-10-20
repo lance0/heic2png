@@ -4,8 +4,9 @@ Simple test script to verify the HEIC to PNG conversion setup.
 """
 
 from pathlib import Path
-from PIL import Image
+
 import pillow_heif
+from PIL import Image
 
 # Register HEIF opener
 pillow_heif.register_heif_opener()

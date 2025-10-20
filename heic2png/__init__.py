@@ -26,8 +26,8 @@ except ImportError:
 def setup_image_libraries():
     """Setup PIL and pillow-heif libraries."""
     try:
-        from PIL import Image
         import pillow_heif
+        from PIL import Image
 
         # Register HEIF opener with PIL
         pillow_heif.register_heif_opener()
@@ -61,8 +61,8 @@ def convert_single_file(args: Tuple[Path, Path, str, str, int, bool]) -> Tuple[b
     output_path = Path(output_dir)
 
     try:
-        from PIL import Image
         import pillow_heif
+        from PIL import Image
 
         pillow_heif.register_heif_opener()
     except ImportError:

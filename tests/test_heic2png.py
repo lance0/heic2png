@@ -8,8 +8,9 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from PIL import Image
+
 import pillow_heif
+from PIL import Image
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
