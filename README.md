@@ -4,7 +4,17 @@
 [![PyPI version](https://badge.fury.io/py/heic2png.svg)](https://pypi.org/project/heic2png/)
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
 
-A high-performance Python script to batch convert HEIC image files to PNG, JPG, or WebP formats with parallel processing support.
+heic2png is a high-performance, command-line tool for batch converting HEIC images to PNG, JPG, or WebP formats. Built with parallel processing and smart optimization features, it can handle large collections of images efficiently while preserving directory structure.
+
+Perfect for photographers, developers, and anyone working with Apple's HEIC format, heic2png offers:
+• Lightning-fast parallel processing using all CPU cores
+• Multiple output formats with quality control
+• Progress tracking and dry-run preview
+• Smart file skipping for incremental updates
+• Cross-platform compatibility (Linux, macOS, Windows)
+• Simple pip installation: `pip install heic2png`
+
+Whether you're migrating photo libraries, processing batch uploads, or automating image workflows, heic2png delivers professional-grade performance with an intuitive interface. Released under the Unlicense (public domain), it's free for any use.
 
 ## Features
 
