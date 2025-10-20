@@ -95,14 +95,19 @@ def convert_single_file(args: Tuple[Path, Path, str, str, int, bool]) -> Tuple[b
 
             # Save with appropriate format and quality
             save_kwargs = {}
-            if output_format.upper() in ("JPEG", "JPG", "WEBP"):
+            # Map format names to PIL format names
+            pil_format = output_format.upper()
+            if pil_format == "JPG":
+                pil_format = "JPEG"
+
+            if pil_format in ("JPEG", "WEBP"):
                 save_kwargs["quality"] = quality
-                if img.mode == "RGBA" and output_format.upper() == "WEBP":
+                if img.mode == "RGBA" and pil_format == "WEBP":
                     save_kwargs["lossless"] = True
                 elif img.mode == "RGBA":
-                    img = img.convert("RGB")  # WebP can handle RGBA, but JPG cannot
+                    img = img.convert("RGB")  # WebP can handle RGBA, but JPEG cannot
 
-            img.save(output_file, output_format.upper(), **save_kwargs)
+            img.save(output_file, pil_format, **save_kwargs)
 
             if verbose:
                 return True, f"✓ Converted: {heic_file} -> {output_file}"
