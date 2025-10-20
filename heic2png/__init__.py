@@ -14,6 +14,13 @@ import time
 from pathlib import Path
 from typing import List, Tuple
 
+try:
+    from tqdm import tqdm
+    HAS_TQDM = True
+except ImportError:
+    tqdm = None
+    HAS_TQDM = False
+
 def setup_image_libraries():
     """Setup PIL and pillow-heif libraries."""
     try:
@@ -165,10 +172,27 @@ def convert_heic_files(input_dir: str, output_dir: str, output_format: str = 'PN
         print(f"Using {cpu_count} parallel processes...")
 
         with multiprocessing.Pool(processes=cpu_count) as pool:
-            results = list(pool.imap(convert_single_file, conversion_args))
+            if HAS_TQDM and not verbose:
+                # Use progress bar for parallel processing
+                results = list(tqdm(  # type: ignore
+                    pool.imap(convert_single_file, conversion_args),
+                    total=len(heic_files),
+                    desc="Converting",
+                    unit="file"
+                ))
+            else:
+                results = list(pool.imap(convert_single_file, conversion_args))
     else:
         # Sequential processing
-        results = [convert_single_file(args) for args in conversion_args]
+        if HAS_TQDM and not verbose:
+            # Use progress bar for sequential processing
+            results = [convert_single_file(args) for args in tqdm(  # type: ignore
+                conversion_args,
+                desc="Converting",
+                unit="file"
+            )]
+        else:
+            results = [convert_single_file(args) for args in conversion_args]
 
     # Process results
     converted_count = 0

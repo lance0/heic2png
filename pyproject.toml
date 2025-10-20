@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heic2png"
+version = "1.0.0"
+description = "High-performance HEIC to PNG/JPG/WebP batch converter with parallel processing"
+readme = "README.md"
+license = {text = "Unlicense"}
+requires-python = ">=3.6"
+authors = [
+    {name = "Lance Tuller", email = "lance@example.com"},
+]
+maintainers = [
+    {name = "Lance Tuller", email = "lance@example.com"},
+]
+keywords = ["heic", "png", "jpg", "webp", "image", "converter", "batch", "parallel"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: Public Domain",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "Pillow>=8.0.0",
+    "pillow-heif>=1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0.0",
+    "pytest-cov",
+    "black",
+    "isort",
+    "flake8",
+]
+progress = [
+    "tqdm>=4.0.0",
+]
+
+[project.scripts]
+heic2png = "heic2png:main"
+
+[project.urls]
+Homepage = "https://github.com/lance0/heic2png"
+Repository = "https://github.com/lance0/heic2png"
+Issues = "https://github.com/lance0/heic2png/issues"
+Changelog = "https://github.com/lance0/heic2png/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["heic2png"]
+package-dir = {"" = "."}
+
+[tool.setuptools.package-data]
+heic2png = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py36']
+
+[tool.isort]
+profile = "black"
+line_length = 100

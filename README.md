@@ -1,18 +1,53 @@
 # heic2png
 
+[![CI](https://github.com/lance0/heic2png/actions/workflows/ci.yml/badge.svg)](https://github.com/lance0/heic2png/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/heic2png.svg)](https://pypi.org/project/heic2png/)
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+
 A high-performance Python script to batch convert HEIC image files to PNG, JPG, or WebP formats with parallel processing support.
+
+## Features
+
+- 🚀 **High Performance**: Parallel processing using all CPU cores
+- 🎯 **Multiple Formats**: Convert to PNG, JPG, or WebP
+- 📊 **Progress Tracking**: Real-time progress bars (with tqdm)
+- 🔄 **Smart Skipping**: Skip already converted files
+- 🧪 **Dry Run**: Preview conversions without processing
+- 🛡️ **Robust**: Comprehensive error handling and validation
+
+## Installation
+
+### From PyPI (Recommended)
+
+```bash
+pip install heic2png
+```
+
+### From Source
+
+```bash
+git clone https://github.com/lance0/heic2png.git
+cd heic2png
+pip install -e .
+```
+
+### Optional Dependencies
+
+For progress bars:
+```bash
+pip install heic2png[progress]
+```
+
+For development:
+```bash
+pip install heic2png[dev]
+```
 
 ## Requirements
 
 - Python 3.6+
 - PIL (Pillow) library
 - pillow-heif library for HEIC support
-
-## Installation
-
-```bash
-pip install Pillow pillow-heif
-```
 
 ## Usage
 
