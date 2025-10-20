@@ -44,9 +44,9 @@ def setup_image_libraries():
 
 def find_heic_files(input_path: Path) -> List[Path]:
     """Find all HEIC files in the input directory recursively."""
-    heic_files = []
-    heic_files.extend(input_path.rglob("*.heic"))
-    heic_files.extend(input_path.rglob("*.HEIC"))
+    heic_files = set()
+    heic_files.update(input_path.rglob("*.heic"))
+    heic_files.update(input_path.rglob("*.HEIC"))
     return sorted(heic_files)  # Sort for consistent processing
 
 
